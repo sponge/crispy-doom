@@ -24,6 +24,8 @@
 
 #include "doomstat.h"
 
+#include "d_redis.h"
+
 
 int	leveltime;
 
@@ -143,6 +145,11 @@ void P_Ticker (void)
 	return;
     }
     
+    if (leveltime == 0) {
+        Redis_Push_Thinkers();
+    } else {
+        Redis_Pull_Thinkers();
+    }
 		
     for (i=0 ; i<MAXPLAYERS ; i++)
 	if (playeringame[i])
@@ -151,6 +158,8 @@ void P_Ticker (void)
     P_RunThinkers ();
     P_UpdateSpecials ();
     P_RespawnSpecials ();
+
+    Redis_Push_Thinkers();
 
     // for par times
     leveltime++;	

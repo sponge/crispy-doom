@@ -78,6 +78,8 @@
 
 #include "d_main.h"
 
+#include "d_redis.h"
+
 //
 // D-DoomLoop()
 // Not a globally visible function,
@@ -2217,6 +2219,15 @@ void D_DoomMain (void)
     {
 	G_TimeDemo (demolumpname);
 	D_DoomLoop ();  // never returns
+    }
+
+    // redis connection
+    p = M_CheckParmWithArgs("-redis", 2);
+    if (p)
+    {
+        const char* addr = myargv[p + 1];
+        int port = atoi(myargv[p + 2]);
+        Redis_Connect(addr, port);
     }
 	
     if (startloadgame >= 0)
